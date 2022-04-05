@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+  python:
+    image: python:latest
+    container_name : python
+    volumes:
+        - .:/usr/src/app

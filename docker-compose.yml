@@ -1,0 +1,49 @@
+version: '3'
+services:
+  mariadb:
+    image: 'mariadb:latest'
+    container_name : 'mariadb__1'
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./docker_projects/mariadb__1/conf.d:/etc/mysql/conf.d
+      - ./docker_projects/mariadb__1/run/mysqld:/run/mysqld
+      - ./docker_projects/mariadb__1/mysql:/var/lib/mysql
+    environment:
+      MARIADB_USER : 'sandring'
+      MARIADB_ROOT_PASSWORD : 'gksdjf452@'
+      MARIADB_DATABASE: 'nginx'
+  nginx__1:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: 'nginx__1'
+    restart: unless-stopped
+    ports:
+      - '80:80' # Public HTTP Port
+      - '443:443' # Public HTTPS Port
+      - '81:81' # Admin Web Port
+      - '8023:8023' # Additional Sample Port
+    environment:
+      DB_MYSQL_HOST: "172.18.0.1"
+      DB_MYSQL_PORT: 3306
+      DB_MYSQL_USER: "sandring"
+      DB_MYSQL_PASSWORD: "gksdjf452@"
+      DB_MYSQL_NAME: "nginx"
+    volumes:
+      - ./docker_projects/nginx__1/data:/data
+      - ./docker_projects/nginx__1/letsencrypt:/etc/letsencrypt
+  jenkins:
+    build: 
+      context: ./jenkins
+      dockerfile: ./dockerfile
+    image : jenkins
+    container_name : jenkins
+    volumes:
+        #젠킨스 정보 연동
+        - ./docker_projects/jenkins__1/var/jenkins_home:/var/jenkins_home
+        #빌드 프로젝트 연동
+        - ./docker_projects/nginx__1/data/site_projects:/var/jenkins_home/workspace
+        #도커소켓연결
+        - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+        - "8080:8080"
+    privileged: true

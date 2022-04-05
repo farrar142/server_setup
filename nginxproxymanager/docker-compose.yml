@@ -1,0 +1,20 @@
+version: "3"
+services:
+  nginx__1:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: 'nginx__1'
+    restart: unless-stopped
+    ports:
+      - '80:80' # Public HTTP Port
+      - '443:443' # Public HTTPS Port
+      - '81:81' # Admin Web Port
+      - '8023:8023' # Additional Sample Port
+    environment:
+      DB_MYSQL_HOST: "172.18.0.1"
+      DB_MYSQL_PORT: 3306
+      DB_MYSQL_USER: "sbsst"
+      DB_MYSQL_PASSWORD: "sbs123414"
+      DB_MYSQL_NAME: "nginx"
+    volumes:
+      - /docker_projects/nginx__1/data:/data
+      - /docker_projects/nginx__1/letsencrypt:/etc/letsencrypt

@@ -1,0 +1,15 @@
+version: '3'
+services:
+  mariadb:
+    image: 'mariadb:latest'
+    container_name : 'mariadb__1'
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./docker_projects/mariadb__1/conf.d:/etc/mysql/conf.d
+      - ./docker_projects/mariadb__1/run/mysqld:/run/mysqld
+      - ./docker_projects/mariadb__1/mysql:/var/lib/mysql
+    environment:
+      MARIADB_USER : 'root'
+      MARIADB_ROOT_PASSWORD : 'sbs123414'
+      MARIADB_DATABASE: 'chat'

@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  jenkins:
+    build: .
+    image : jenkins
+    container_name : jenkins
+    volumes:
+        #젠킨스 정보 연동
+        - /docker_projects/jenkins__1/var/jenkins_home:/var/jenkins_home
+        #빌드 프로젝트 연동
+        - /docker_projects/nginx__1/data/site_projects:/var/jenkins_home/workspace
+        #도커소켓연결
+        - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+        - "8080:8080"
+    privileged: true
